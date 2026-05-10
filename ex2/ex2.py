@@ -45,15 +45,67 @@ def get_data(categories=None, portion=1.):
 # Q1,2
 def MLP_classification(portion=1., model=None):
     """
-    Perform linear classification
-    :param portion: portion of the data to use
-    :return: classification accuracy
+    Train a torch classifier (linear or MLP) on TFIDF features.
+    :param portion: portion of the train data to use
+    :param model:   instantiated nn.Module to train
+    :return:        (train_losses, val_accs) per epoch
     """
+    import torch
+    import torch.nn as nn
+    from torch.utils.data import DataLoader, TensorDataset
     from sklearn.feature_extraction.text import TfidfVectorizer
+    from tqdm import tqdm
+
     x_train, y_train, x_test, y_test = get_data(categories=category_dict.keys(), portion=portion)
 
-    ########### add your code here ###########
-    return
+    feature_dim = 2000
+    epochs = 20
+    batch_size = 16
+    lr = 1e-3
+
+    vectorizer = TfidfVectorizer(max_features=feature_dim)
+    X_train = vectorizer.fit_transform(x_train).toarray().astype(np.float32)
+    X_test  = vectorizer.transform(x_test).toarray().astype(np.float32)
+    y_train_a = np.array(y_train, dtype=np.int64)
+    y_test_a  = np.array(y_test,  dtype=np.int64)
+
+    train_loader = DataLoader(
+        TensorDataset(torch.from_numpy(X_train), torch.from_numpy(y_train_a)),
+        batch_size=batch_size, shuffle=True)
+    test_loader = DataLoader(
+        TensorDataset(torch.from_numpy(X_test), torch.from_numpy(y_test_a)),
+        batch_size=batch_size)
+
+    dev = torch.device('cuda' if torch.cuda.is_available()
+                       else ('mps' if torch.backends.mps.is_available() else 'cpu'))
+    model = model.to(dev)
+    optimizer = torch.optim.Adam(model.parameters(), lr=lr)
+    criterion = nn.CrossEntropyLoss()
+
+    train_losses, val_accs = [], []
+    for epoch in range(1, epochs + 1):
+        model.train()
+        running, n = 0.0, 0
+        for xb, yb in train_loader:
+            xb, yb = xb.to(dev), yb.to(dev)
+            optimizer.zero_grad()
+            loss = criterion(model(xb), yb)
+            loss.backward()
+            optimizer.step()
+            running += loss.item() * xb.size(0)
+            n += xb.size(0)
+        train_losses.append(running / n)
+
+        model.eval()
+        correct, total = 0, 0
+        with torch.no_grad():
+            for xb, yb in test_loader:
+                xb, yb = xb.to(dev), yb.to(dev)
+                correct += (model(xb).argmax(1) == yb).sum().item()
+                total += yb.size(0)
+        val_accs.append(correct / total)
+        print(f'Epoch {epoch:02d} | train loss {train_losses[-1]:.4f} | val acc {val_accs[-1]:.4f}')
+    return train_losses, val_accs
 
 
 # Q3
@@ -122,6 +174,7 @@ def transformer_classification(portion=1.):
     learning_rate = 5e-5
 
     # Model, tokenizer, and metric
+    torch.manual_seed(42)
     model = AutoModelForSequenceClassification.from_pretrained('distilroberta-base', num_labels=num_labels).to(dev)
     tokenizer = AutoTokenizer.from_pretrained('distilroberta-base')
     metric = evaluate.load("accuracy")

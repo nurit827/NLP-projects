@@ -8,12 +8,13 @@ The fine-tuned **distilroberta-base** transformer with **portion = 0.2** of the 
 
 The **transformer** — by a wide margin.
 
-- At `portion=0.1`, validation accuracy **peaks around epoch 2 and then drops** — classic overfitting in only 3 epochs.
-- At `portion=0.2`, validation accuracy **keeps climbing** for all 3 epochs and reaches the best score of the whole exercise.
+- At `portion=0.1`, validation accuracy peaks around epoch 2 and then drops — classic overfitting in only 3 epochs.
+- At `portion=0.2`, validation accuracy peaks at epoch 1 (~0.86), drops at epoch 2 even as train loss keeps falling — also clearly overfitting, just at a different epoch.
+- The exact epoch of the peak shifts noticeably between portions and even between random seeds.
 
-That much sensitivity (overfit at 10% → still accelerating at 20%) doesn't show up in the smaller models:
+That whole-trajectory volatility doesn't show up in the smaller models:
 
-- The **MLP** is moderately sensitive — bigger portions help, but the curves are not nearly as different as the transformer's.
+- The **MLP** is moderately sensitive — bigger portions help and it overfits more aggressively at larger portions, but the curve shapes don't move around nearly as much as the transformer's.
 - The **log-linear** classifier is the least sensitive — it improves slowly with more data and looks similar across portions.
 
 So the order from most to least sensitive to training-set size is: **transformer > MLP > log-linear**.
