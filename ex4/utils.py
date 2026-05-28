@@ -4,6 +4,8 @@ from collections import defaultdict
 import nltk
 from nltk.corpus import dependency_treebank
 
+from chu_liu_edmonds import cle_min
+
 
 def load_data():
     nltk.download('dependency_treebank', quiet=True)
@@ -45,7 +47,21 @@ def gold_edge_features(g):
     return edge_features(g, edges)
 
 
-def train(train_sents, infer, n_iterations=2, lr=1.0):
+def infer(g, weights):
+    n = len(g.nodes)  # includes ROOT at 0
+    scores = {}
+    for u_addr in range(n):
+        for v_addr in range(1, n):  # v is never ROOT
+            if u_addr == v_addr:
+                continue
+            u, v = g.nodes[u_addr], g.nodes[v_addr]
+            score = sum(weights[idx] for idx in feature_function(u, v))
+            scores[(u_addr, v_addr)] = -score  # negate for min arborescence
+    tree = cle_min(scores, n)  # {child: parent}
+    return [(parent, child) for child, parent in tree.items()]
+
+
+def train(train_sents, n_iterations=2, lr=1.0):
     weights = defaultdict(float)
     weights_sum = defaultdict(float)
     total_steps = 0
@@ -56,7 +72,7 @@ def train(train_sents, infer, n_iterations=2, lr=1.0):
         for i in order:
             g = train_sents[i]
 
-            pred_edges = infer(g, weights)  # list of (u_addr, v_addr)
+            pred_edges = infer(g, weights)
             pred_feats = edge_features(g, pred_edges)
             gold_feats = gold_edge_features(g)
 
