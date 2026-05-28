@@ -34,3 +34,8 @@ Notes
 - The last 10% of the "news" sentences are used as the test set.
 - Pure MLE Viterbi pins unknown words to "NN"; Add-one smoothing makes
   every (word, tag) pair nonzero so Viterbi can tag unknowns freely.
+
+AI usage declaration
+--------------------
+AI usage declaration - We used Claude Code to assist with writing and
+debugging parts of the code for the practical section of this project.
