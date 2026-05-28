@@ -55,7 +55,7 @@ def infer(g, weights):
             if u_addr == v_addr:
                 continue
             u, v = g.nodes[u_addr], g.nodes[v_addr]
-            score = sum(weights[idx] for idx in feature_function(u, v))
+            score = sum(weights.get(idx, 0.0) for idx in feature_function(u, v))
             scores[(u_addr, v_addr)] = -score  # negate for min arborescence
     tree = cle_min(scores, n)  # {child: parent}
     return [(parent, child) for child, parent in tree.items()]
@@ -84,3 +84,30 @@ def train(train_sents, n_iterations=2, lr=1.0):
             total_steps += 1
 
     return {idx: s / total_steps for idx, s in weights_sum.items()}
+
+
+def compute_uas(test_sents, weights):
+    correct = total = 0
+    for g in test_sents:
+        pred = dict(infer(g, weights))  # {child: parent}
+        for addr, node in g.nodes.items():
+            if addr == 0:
+                continue
+            if pred.get(addr) == node['head']:
+                correct += 1
+            total += 1
+    return correct / total
+
+
+## Part 2 — Attention-Based Parsing
+
+
+def attn_to_arc_scores(attn_matrix):
+    n = attn_matrix.shape[0] - 1  # number of words (excluding ROOT)
+    scores = {}
+    for u in range(n + 1):
+        for v in range(1, n + 1):  # v is never ROOT
+            if u == v:
+                continue
+            scores[(u, v)] = -float(attn_matrix[u, v])  # negate for cle_min
+    return scores
