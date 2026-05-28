@@ -83,7 +83,8 @@ def train(train_sents, n_iterations=2, lr=1.0):
                 weights_sum[idx] += val
             total_steps += 1
 
-    return {idx: s / total_steps for idx, s in weights_sum.items()}
+    avg_weights = {idx: s / total_steps for idx, s in weights_sum.items()}
+    return avg_weights, dict(weights)
 
 
 def compute_uas(test_sents, weights):
@@ -111,3 +112,20 @@ def attn_to_arc_scores(attn_matrix):
                 continue
             scores[(u, v)] = -float(attn_matrix[u, v])  # negate for cle_min
     return scores
+
+
+def compute_uas_attn(test_sents, tokenizer, model, layer):
+    from transformer_parser_utils import get_attention_matrix
+    correct = total = 0
+    for g in test_sents:
+        words = [g.nodes[i]['word'] for i in range(1, len(g.nodes))]
+        attn_matrix = get_attention_matrix(words, tokenizer, model, layer=layer, head_mode="mean")
+        scores = attn_to_arc_scores(attn_matrix)
+        tree = cle_min(scores, len(g.nodes))  # {child: parent}
+        for addr, node in g.nodes.items():
+            if addr == 0:
+                continue
+            if tree.get(addr) == node['head']:
+                correct += 1
+            total += 1
+    return correct / total
