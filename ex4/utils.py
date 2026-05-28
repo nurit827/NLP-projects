@@ -89,7 +89,7 @@ def train(train_sents, n_iterations=2, lr=1.0):
 def compute_uas(test_sents, weights):
     correct = total = 0
     for g in test_sents:
-        pred = dict(infer(g, weights))  # {child: parent}
+        pred = {child: parent for parent, child in infer(g, weights)}
         for addr, node in g.nodes.items():
             if addr == 0:
                 continue
