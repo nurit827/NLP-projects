@@ -31,9 +31,12 @@ Notes
 -----
 - All logic lives in utils.py; the notebook only imports, calls, and prints.
 - The last 10% of the dependency_treebank sentences are used as the test set.
-- The perceptron uses 2 iterations with learning rate 1 and averaged weights.
+- The perceptron uses 2 iterations with learning rate 1 and returns both averaged
+  and raw final weights for comparison.
 - Inference uses Chu-Liu/Edmonds on negated scores (min arborescence = max tree).
-- For Part 2, BERT attention weights are used directly as arc scores (no training).
+- For Part 2, BERT (bert-base-uncased) attention weights are used directly as arc
+  scores with head_mode="mean" for layers 0, 5, and 11.
+- Part 2.3 compares both parsers side by side on UAS.
 
 AI usage declaration
 --------------------
