@@ -31,15 +31,18 @@ def feature_function(u, v):
     return [get_index(word_key), get_index(pos_key)]
 
 
-def gold_edge_features(g):
+def edge_features(g, edges):
     feats = defaultdict(int)
-    for addr, node in g.nodes.items():
-        if addr == 0:
-            continue
-        head = g.nodes[node['head']]
-        for idx in feature_function(head, node):
+    for u_addr, v_addr in edges:
+        for idx in feature_function(g.nodes[u_addr], g.nodes[v_addr]):
             feats[idx] += 1
     return feats
+
+
+def gold_edge_features(g):
+    edges = [(node['head'], addr)
+             for addr, node in g.nodes.items() if addr != 0]
+    return edge_features(g, edges)
 
 
 def train(train_sents, infer, n_iterations=2, lr=1.0):
@@ -54,12 +57,7 @@ def train(train_sents, infer, n_iterations=2, lr=1.0):
             g = train_sents[i]
 
             pred_edges = infer(g, weights)  # list of (u_addr, v_addr)
-
-            pred_feats = defaultdict(int)
-            for u_addr, v_addr in pred_edges:
-                for idx in feature_function(g.nodes[u_addr], g.nodes[v_addr]):
-                    pred_feats[idx] += 1
-
+            pred_feats = edge_features(g, pred_edges)
             gold_feats = gold_edge_features(g)
 
             for idx in set(gold_feats) | set(pred_feats):
