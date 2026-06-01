@@ -73,6 +73,34 @@ attention pattern. In the lowest layer that pattern is strongly local, and
 since many dependencies are between nearby words, \texttt{layer = 0} ends up
 winning.
 
+\paragraph{Side note: the orientation of the attention matrix.}
+The matrix is directional: \texttt{attn[u,v]} is how much word $u$ attends to
+word $v$. The task's convention treats $u$ as head and $v$ as dependent, so we
+score arcs with \texttt{-attn[u,v]} (reported above). But a dependent often
+attends to its head rather than the reverse, so we also tried the transposed
+score \texttt{-attn[v,u]}:
+
+\begin{center}
+\begin{tabular}{ccc}
+\toprule
+layer & original \texttt{attn[u,v]} & transposed \texttt{attn[v,u]} \\
+\midrule
+0  & 0.230 & 0.160 \\
+5  & 0.138 & \textbf{0.217} \\
+11 & 0.120 & 0.013 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Under the transposed orientation the middle layer becomes the best (layer 5 at
+0.217, above layers 0 and 11), recovering the expected trend that middle
+layers are the most syntactic, whereas in the original orientation the
+surface-local layer 0 wins. This suggests that the syntactically meaningful
+signal is a dependent attending to its head, and that layer 0's high original
+score reflects positional locality rather than real syntax. We report the
+non-transposed orientation as our primary result, following the convention of
+the provided \texttt{get\_attention\_matrix}.
+
 \subsection*{2.3 \quad Comparison with the MST parser}
 
 \begin{center}
