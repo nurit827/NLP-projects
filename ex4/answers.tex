@@ -1,0 +1,120 @@
+\documentclass[11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{microtype}
+
+\title{Natural Language Processing - Ex4}
+\author{Nurit Tolkowsky and Shaul Tolkowsky}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{MST Parser}
+
+\subsection*{1.4 \quad Evaluation (UAS)}
+
+We trained the averaged perceptron on the first 90\% of the
+\texttt{dependency\_treebank} parsed sentences (3522 sentences), for 2
+iterations with learning rate 1, traversing the training instances in a
+random order. Edge scores are the dot product of the weight vector with the
+word-bigram and POS-bigram feature function; inference uses the
+Chu-Liu/Edmonds algorithm (\texttt{cle\_min}) applied to negated scores
+(minimum arborescence $=$ maximum spanning tree). Evaluated on the last 10\%
+of the corpus (392 sentences), the mean unlabeled attachment score (UAS) of
+the learned averaged weight vector is:
+\[
+  \text{UAS (averaged perceptron)} = 0.1768 .
+\]
+
+\section{Attention-Based Parsing}
+
+\subsection*{2.2(b) \quad UAS per BERT layer (\texttt{head\_mode = "mean"})}
+
+Using \texttt{get\_attention\_matrix}, \texttt{attn\_to\_arc\_scores} (which
+negates the attention weights for \texttt{cle\_min} and never creates an edge
+into ROOT, since ROOT can never be a dependent), and \texttt{cle\_min}, we
+parsed every sentence in the test set. The mean UAS for each setting is:
+
+\begin{center}
+\begin{tabular}{lc}
+\toprule
+Setting (\texttt{head\_mode = mean}) & UAS \\
+\midrule
+\texttt{layer = 0}\ \ (first BERT layer)  & 0.230 \\
+\texttt{layer = 5}\ \ (middle BERT layer) & 0.138 \\
+\texttt{layer = 11} (last BERT layer)     & 0.120 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph{Discussion - which setting works best and why.}
+The first layer (\texttt{layer = 0}) gives the highest UAS. Because
+\texttt{head\_mode="mean"} averages all heads, the score reflects each
+layer's average attention pattern: in the lowest layer this pattern is
+dominated by local, positional behaviour (words attend mostly to their
+immediate neighbours). Since a large fraction of dependency arcs connect
+nearby words, this surface locality lines up with the gold tree better than
+the more diffuse, semantically-oriented attention of the middle and upper
+layers, where the few genuinely syntactic heads are washed out by averaging.
+
+This may seem to contradict the intuition stated in the exercise - that,
+since lower layers are closer to surface syntax and upper layers to
+semantics, the middle layers should be most useful for parsing. A likely
+reason it does not hold here is that we average all heads together
+(\texttt{head\_mode="mean"}): if only a few individual heads track syntax,
+averaging dilutes them, so the score is dominated by each layer's overall
+attention pattern. In the lowest layer that pattern is strongly local, and
+since many dependencies are between nearby words, \texttt{layer = 0} ends up
+winning.
+
+\subsection*{2.3 \quad Comparison with the MST parser}
+
+\begin{center}
+\begin{tabular}{lc}
+\toprule
+Parser & UAS \\
+\midrule
+Perceptron MST (averaged weights)        & 0.1768 \\
+BERT attention, best setting (\texttt{layer = 0}) & 0.230 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph{Data requirements.}
+The perceptron needs labeled, dependency-annotated training data plus a
+hand-designed feature function, whereas the attention-based parser needs no
+task-specific training at all - it reuses attention weights from a model
+pre-trained only on masked language modeling.
+
+\paragraph{Inference cost.}
+The perceptron is far cheaper, scoring each candidate edge with a sparse dot
+product, while the attention parser requires a full BERT forward pass per
+sentence.
+
+\paragraph{Accuracy.}
+Here the best attention setting (0.230) slightly outperforms our 2-iteration
+perceptron (0.1768), which is notable given that BERT never saw a parse tree.
+Part of the perceptron's low score is that its feature function is
+deliberately simple: every feature looks only at a pair - the two endpoints
+of a single edge (one word bigram and one POS bigram) - with no higher-order
+features (such as word triplets, head-dependent distance, or combined
+word+POS features) and no surrounding context. The word-bigram features are
+also extremely sparse - most word pairs seen at test time never appeared in
+training - so they barely generalize, and with only 2 training iterations the
+model stays underfit. BERT, by contrast, encodes each word using the whole
+sentence, so even its raw attention carries far richer structural
+information.
+
+\paragraph{Why untrained attention correlates with syntax.}
+Accurately predicting a masked word requires implicitly modeling grammatical
+relationships - which words govern or modify which - so some attention heads
+end up tracking head-dependent structure as a by-product of language
+modeling.
+
+\end{document}

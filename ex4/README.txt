@@ -1,4 +1,4 @@
-NLP Exercise 4 — MST Parser and Attention-Based Parsing
+NLP Exercise 4 - MST Parser and Attention-Based Parsing
 ========================================================
 
 Files
@@ -40,5 +40,5 @@ Notes
 
 AI usage declaration
 --------------------
-AI usage declaration - We used Claude Code to assist with writing and
-debugging parts of the code for the practical section of this project.
+We used Claude Code to assist with writing and debugging parts of the code
+and with phrasing the written answers for this project.
