@@ -1,0 +1,5 @@
+
+# Ex5 large/generated files
+Ex5/transformer_emb_cache.pkl
+__pycache__/
+*.pyc
