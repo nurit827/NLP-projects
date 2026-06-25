@@ -1,0 +1,64 @@
+cuda available: True NVIDIA L40S
+
+======================================================================
+SECTION 6: one-hot log-linear
+======================================================================
+Epoch 1/10 | train_loss=0.5739 train_acc=0.7326 | val_loss=0.5918 val_acc=0.7443
+Epoch 2/10 | train_loss=0.4481 train_acc=0.8569 | val_loss=0.5438 val_acc=0.7817
+Epoch 3/10 | train_loss=0.3830 train_acc=0.8840 | val_loss=0.5134 val_acc=0.7931
+Epoch 4/10 | train_loss=0.3408 train_acc=0.8979 | val_loss=0.4902 val_acc=0.8119
+Epoch 5/10 | train_loss=0.3104 train_acc=0.9062 | val_loss=0.4732 val_acc=0.8150
+Epoch 6/10 | train_loss=0.2871 train_acc=0.9130 | val_loss=0.4609 val_acc=0.8129
+Epoch 7/10 | train_loss=0.2686 train_acc=0.9179 | val_loss=0.4502 val_acc=0.8108
+Epoch 8/10 | train_loss=0.2535 train_acc=0.9211 | val_loss=0.4402 val_acc=0.8150
+Epoch 9/10 | train_loss=0.2409 train_acc=0.9247 | val_loss=0.4351 val_acc=0.8119
+Epoch 10/10 | train_loss=0.2301 train_acc=0.9276 | val_loss=0.4282 val_acc=0.8160
+
+Test loss=0.4237 | Test accuracy=0.8233
+Special subsets:
+  Negated polarity accuracy (62 examples): 0.6452
+  Rare words accuracy (50 examples): 0.5400
+
+======================================================================
+SECTION 7: transformer-avg log-linear
+======================================================================
+Epoch 1/10 | train_loss=0.4210 train_acc=0.8206 | val_loss=0.4787 val_acc=0.7838
+Epoch 2/10 | train_loss=0.3729 train_acc=0.8426 | val_loss=0.4616 val_acc=0.7963
+Epoch 3/10 | train_loss=0.3663 train_acc=0.8459 | val_loss=0.4551 val_acc=0.8046
+Epoch 4/10 | train_loss=0.3635 train_acc=0.8478 | val_loss=0.4550 val_acc=0.7973
+Epoch 5/10 | train_loss=0.3624 train_acc=0.8475 | val_loss=0.4536 val_acc=0.8015
+Epoch 6/10 | train_loss=0.3609 train_acc=0.8483 | val_loss=0.4501 val_acc=0.7983
+Epoch 7/10 | train_loss=0.3608 train_acc=0.8478 | val_loss=0.4504 val_acc=0.7963
+Epoch 8/10 | train_loss=0.3603 train_acc=0.8482 | val_loss=0.4551 val_acc=0.7931
+Epoch 9/10 | train_loss=0.3597 train_acc=0.8490 | val_loss=0.4511 val_acc=0.8046
+Epoch 10/10 | train_loss=0.3594 train_acc=0.8484 | val_loss=0.4531 val_acc=0.8025
+
+Test loss=0.3967 | Test accuracy=0.8368
+Special subsets:
+  Negated polarity accuracy (62 examples): 0.6290
+  Rare words accuracy (50 examples): 0.8400
+
+======================================================================
+SECTION 8: bi-LSTM
+======================================================================
+Epoch 1/4 | train_loss=0.3750 train_acc=0.8358 | val_loss=0.3999 val_acc=0.8264
+Epoch 2/4 | train_loss=0.2760 train_acc=0.8882 | val_loss=0.3796 val_acc=0.8545
+Epoch 3/4 | train_loss=0.2335 train_acc=0.9073 | val_loss=0.4229 val_acc=0.8378
+Epoch 4/4 | train_loss=0.2055 train_acc=0.9199 | val_loss=0.4881 val_acc=0.8472
+
+Test loss=0.4266 | Test accuracy=0.8514
+Special subsets:
+  Negated polarity accuracy (62 examples): 0.6129
+  Rare words accuracy (50 examples): 0.7800
+
+======================================================================
+SECTION 9: fine-tuned distilroberta
+======================================================================
+Using device: cuda
+Epoch 1/2 | train_loss=0.6852 train_acc=0.5256 | val_loss=0.6315 val_acc=0.8202
+Epoch 2/2 | train_loss=0.4084 train_acc=0.8472 | val_loss=0.3212 val_acc=0.8753
+
+Test loss=0.2756 | Test accuracy=0.8919
+Special subsets:
+  Negated polarity accuracy (62 examples): 0.7419
+  Rare words accuracy (50 examples): 0.7400
