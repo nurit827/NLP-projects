@@ -248,29 +248,6 @@ with the same weights (a longer sequence reuses them more times, it does not
 create new ones). So $n$ governs how many times the weights are \emph{used}
 (runtime compute, and the $n^2$ attention map), not how many weights exist.
 
-\paragraph{Clarifications established along the way.}
-\begin{itemize}
-\item ``Parameters of a matrix'' = its individual entries; a $d \times d$ matrix
-has $d^2$ parameters, each a knob that training adjusts.
-\item Each weight matrix defines a linear map applied per token: $W_Q, W_K, W_V,
-W_O$ map a token's $d$-vector to a $d$-vector (hence $d \times d$), and the
-embedding matrix is the weight of a linear map from a $V$-dim one-hot vector to
-a $d$-dim dense vector (multiplying by a one-hot just selects a row).
-\item The output $y = Wx$ has no parameters - it is recomputed per input; only
-$W$ is learned.
-\item $n$ (context length) is a property of the \emph{input} and can vary per
-input, unlike the fixed architecture choices $V, d, L$.
-\item A maximum context length is a real model limitation but adds no parameters
-here; the one term that \emph{would} make $n$ matter is positional embeddings,
-which the question explicitly ignores.
-\item $W$ acts on one token's $d$-vector at a time, so $n$ is how many times $W$
-is reused, not its shape; $n$ and $d$ are not comparable dimensions ($d$ is a
-single token's width, $n$ is the token count).
-\item $W_O$ is the output projection: the final $d \times d$ map applied after
-attention mixes the values, recombining the result back into dimension $d$
-before the next layer.
-\end{itemize}
-
 \subsection*{11.2 \quad RNN}
 
 Replacing the $L$ attention layers with $L$ recurrent layers, where one
@@ -288,10 +265,7 @@ recurrent part ($R$ per layer $\times$ $L$ layers).
 transformation is time-shared, so the same weights are applied at every
 timestep and a longer sequence just means more timesteps reusing the same $R$
 parameters. This is exactly what lets an RNN handle arbitrarily long sequences
-with a fixed parameter budget. (If asked to expand $R$ for a vanilla RNN with
-hidden size $h$, it would be roughly $R = d h + h^2$ ignoring biases - an
-input$\to$hidden matrix plus a hidden$\to$hidden matrix; the question spares us
-this by giving $R$ directly.)
+with a fixed parameter budget.
 
 \subsection*{11.3 \quad Characters as tokens}
 
@@ -318,10 +292,9 @@ total in Part 1 - collapses by $\sim$300$\times$, while everything else
 (attention $4Ld^2$ / recurrent $LR$) stays flat, so the total drops
 substantially.
 
-\medskip
-\noindent\textbf{Punchline.} Growing $n$ by $5\times$ costs \emph{zero}
-parameters (only runtime compute), while shrinking $V$ saves a large amount.
-Character-level tokenization makes both models \emph{smaller} in parameter
-count - the trade-off is paid in sequence length (compute), not in weights.
+In summary, growing $n$ by $5\times$ costs no parameters (only runtime compute),
+while shrinking $V$ saves a large amount, so character-level tokenization makes
+both models smaller in parameter count - the trade-off is paid in sequence
+length (compute) rather than in weights.
 
 \end{document}
