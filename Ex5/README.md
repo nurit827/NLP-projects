@@ -66,4 +66,4 @@ Sections 6–8 train on the full sentences together with their sub-phrases; Sect
 
 ## AI usage declaration
 
-We used Claude Code to assist with writing and debugging parts of the code, with running the training on the cluster, and with phrasing the written answers for this project.
+We used Claude Code to assist with writing and debugging parts of the code.
