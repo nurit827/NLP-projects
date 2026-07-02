@@ -9,13 +9,14 @@
 \usepackage{microtype}
 \usepackage{graphicx}
 \usepackage{subcaption}
+\usepackage{float}
 
 \title{Natural Language Processing - Ex5\\\large Sentiment Analysis with Neural Models}
 \author{Nurit Tolkowsky and Shaul Tolkowsky}
 \date{}
 
 \newcommand{\modelfig}[2]{%
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
 \begin{subfigure}{0.49\textwidth}\centering
 \includegraphics[width=\textwidth]{#1_loss.png}\caption{Train/validation loss}
@@ -295,6 +296,17 @@ substantially.
 In summary, growing $n$ by $5\times$ costs no parameters (only runtime compute),
 while shrinking $V$ saves a large amount, so character-level tokenization makes
 both models smaller in parameter count - the trade-off is paid in sequence
-length (compute) rather than in weights.
+length rather than in weights. And for an autoregressive model that cost is not
+only extra computation but also extra \emph{time}: since such a model produces
+tokens one at a time, a $\sim$5$\times$ longer sequence means $\sim$5$\times$
+more sequential generation steps that cannot be parallelized away, on top of the
+higher per-step compute (such as the $n^2$ attention) that the longer context
+adds anyway.
+
+\section*{AI usage declaration}
+
+We used Claude Code to assist with writing and debugging parts of the code, with
+running the training on the cluster, and with phrasing the written answers for
+this project.
 
 \end{document}
