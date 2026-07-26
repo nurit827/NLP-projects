@@ -1,4 +1,7 @@
 
+.DS_Store
+exam/.panopto-cookie
+
 # Ex5 large/generated files
 Ex5/transformer_emb_cache.pkl
 __pycache__/
