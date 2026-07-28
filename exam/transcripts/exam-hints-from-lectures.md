@@ -8,13 +8,24 @@
 2. **Grammar + dependency parsing**
 3. **LLM post-training**
 
-מיפוי לחומר המאורגן במאגר:
+## הבהרה ב-WhatsApp — 27/07/2026
 
-- `04-HMM/` — מחוץ למבחן.
-- נושאי grammar ב-`07-Syntax/` ו-`09-Dependency-Parsing/` — מחוץ למבחן.
-- `12-PostTraining/` — מחוץ למבחן.
+ציטוט מההודעה (כלשונו):
 
-יש לדלג על נושאים אלה בתכנון הלמידה למבחן ולא להשתמש בהם לשאלות חזרה או לשאלות קישור בין נושאים.
+> שאלנו את עמרי, החומר הזה יורד מהמבחן: Hmm; Dep parsing - כולל graph based dep parsing; Grammar; Post training. סהכ 4 מצגות. גם שאלנו על ויטרבי (מופיע במצגת hmm אבל משתמשים בו גם בmemm, crf ) והוא אמר שצריך לדעת את זה
+
+מיפוי מעודכן לחומר המאורגן במאגר (4 מצגות):
+
+| נושא שיורד | נתיב במאגר |
+|---|---|
+| HMM | `04-HMM/` (כל ההרצאה) |
+| Dependency parsing (כולל graph-based) | `09-Dependency-Parsing/` — כולל `graph-based-parsing/`, `dependency-parsing/`, `mst-parser/`, `neural-mst-parsing/` |
+| Grammar | `07-Syntax/grammar/` |
+| Post-training | `12-PostTraining/` |
+
+**ויטרבי נשאר בתחום:** המרצה אישר שצריך לדעת את אלגוריתם ויטרבי — אבל בהקשר של MEMM/CRF (ולא שאלות HMM/POS tagging). לא לדלג על ויטרבי ב-`05-MEMM-CRF/`.
+
+יש לדלג על החומר המוחרג בתכנון הלמידה למבחן ולא להשתמש בו לשאלות חזרה או לשאלות קישור בין נושאים.
 
 ## סשן 28/06/2026 — שיעור חזרה מסכם (השיעור האחרון בקורס)
 

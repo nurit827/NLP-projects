@@ -57,3 +57,31 @@ Slides worth rereading before the exam. Keep entries brief and point to the orig
 - **Slide:** 9/15 — MLE in MEMMs
 - **Why revisit:** Clarifies that \(Z(h;w)\) is simply the local softmax denominator and explains why each log-probability becomes a gold-label score minus a log-normalizer.
 - **Key expressions:** \(Z(h;w)=\sum_{y'\in T}e^{f(h,y')^\top w}\); \(\log P(y\mid h)=f(h,y)^\top w-\log Z(h;w)\).
+
+## 2026-07-26 — Viterbi inference for MEMMs
+- **Lecture/subtopic:** 05-MEMM-CRF / memm
+- **Deck:** `05-MEMM-CRF/memm/memm.pdf`
+- **Slide:** 10/15 — Inference in MEMMs
+- **Why revisit:** Practice writing the dynamic program one or two days before the exam; the key is retaining the best path for every possible ending state, not one globally best prefix.
+- **Key ideas:** Paths ending in the same Markov state face identical future factors, so inferior ones can be discarded; for a second-order MEMM, the retained state is the final tag pair \((t_{i-1},t_i)\).
+
+## 2026-07-26 — MEMM label bias
+- **Lecture/subtopic:** 05-MEMM-CRF / memm
+- **Deck:** `05-MEMM-CRF/memm/memm.pdf`
+- **Slide:** 13/15 — The Label Bias
+- **Why revisit:** Likely exam material: explain how local normalization unfairly favors states with few or deterministic outgoing transitions.
+- **Key ideas:** An absorbing state is the extreme case because its sole outgoing transition must receive probability \(1\); more generally, low-entropy outgoing distributions can inflate a path despite weak evidence for entering the state.
+
+## 2026-07-27 — CRF likelihood gradient
+- **Lecture/subtopic:** 05-MEMM-CRF / crf
+- **Deck:** `05-MEMM-CRF/crf/crf.pdf`
+- **Slide:** 7/19 — Estimating \(w\)
+- **Why revisit:** Dense derivation of the CRF gradient, especially differentiating the global \(\log Z(x;w)\); reread before the exam but prioritize the observed-minus-expected intuition.
+- **Key expressions:** \(\nabla LL=\text{observed feature counts}-\mathbb E_{P(y\mid x)}[\text{feature counts}]\); \(\partial\log Z/\partial w_k=\sum_yP(y\mid x)F_k(x,y)\).
+
+## 2026-07-27 — CRF edge marginals in the trellis
+- **Lecture/subtopic:** 05-MEMM-CRF / crf
+- **Deck:** `05-MEMM-CRF/crf/crf.pdf`
+- **Slide:** 11/19 — Forward–Backward Algorithm in Viterbi Trellis
+- **Why revisit:** Gives the key visual interpretation of an edge marginal and an exam-worthy comparison between forward–backward and Viterbi.
+- **Key ideas:** \(\alpha\) sums all prefixes reaching the edge, \(\beta\) sums all suffixes leaving it, and \(\alpha M_j\beta\) gives the unnormalized mass of all complete paths containing it. Forward uses \(\sum_u\alpha_{i-1}(u)M_i(u,v)\), whereas Viterbi replaces the sum with \(\max_u\).

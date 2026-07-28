@@ -11,7 +11,7 @@ Run topic-by-topic NLP exam preparation using materials under the repository's `
 
 ## Material layout
 
-- `exam/exam-scope.md` — current official inclusion/exclusion rules; authoritative when selecting topics and questions.
+- `exam/exam-scope.md` — current official inclusion/exclusion rules; authoritative when selecting topics and questions. Exclusions are **concept-specific**: skip HMM, grammar (`07-Syntax/grammar/`), all dependency parsing (`09-Dependency-Parsing/` incl. `graph-based-parsing/`), and post-training (`12-PostTraining/`). **Viterbi stays in scope** — teach and question it in MEMM/CRF contexts, never as HMM/POS-tagging material.
 - `exam/NN-Topic-Name/` — lecture folders containing full decks and subtopic folders.
 - `transcript.md` — lecturer transcript beside a lecture or subtopic deck when available.
 - `exam/transcripts/exam-hints-from-lectures.md` — optional exam remarks and announcements.
@@ -47,7 +47,7 @@ Use short, precise expected answers. Require justification.
 
 ## Session flow
 
-1. **Choose an in-scope topic.** Read `exam/exam-scope.md` first. Never select excluded material or use it in questions, link-backs, reviews, or mock exams. Then read `exam/progress.md` and `exam/weak-spots.md`.
+1. **Choose an in-scope topic.** Read `exam/exam-scope.md` first. Never select excluded material or use it in questions, link-backs, reviews, or mock exams. Exclusions are concept-specific: do not walk or quiz `04-HMM/`, `07-Syntax/grammar/`, `09-Dependency-Parsing/` (including graph-based parsing), or `12-PostTraining/` — but **do** teach and question Viterbi when it appears in MEMM/CRF or other in-scope lectures. Then read `exam/progress.md` and `exam/weak-spots.md`.
 2. **Load the material.** Read the subtopic PDF, its transcript when available, and `exam/exam-style-notes.md` when present. Open the PDF for the user when starting a subtopic.
 3. **Walk one slide at a time.** Briefly explain its key idea and any lecturer emphasis from the transcript. Stay until the user asks to move.
 4. **Do not ask slide-level questions.** Move immediately when the user says “next.” Reserve retrieval questions for subtopic end.
